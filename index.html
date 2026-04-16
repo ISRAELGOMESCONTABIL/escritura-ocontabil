@@ -1992,7 +1992,7 @@ function importDP(e){
 // ============================================================
 function expCSV(){
   // Estrutura: DATA;CONTA DÉBITO;CONTA CRÉDITO;VALOR;HISTÓRICO;1;CODIGO_SISTEMA
-  const h='DATA;CONTA DÉBITO;CONTA CRÉDITO;VALOR;HISTÓRICO;1;CODIGO_SISTEMA\n';
+  // SEM cabeçalho — apenas dados, para importação direta em outros sistemas
   const r=lancFil.filter(l=>!l.ignorado).map(l=>{
     const cod=l.codigoSistema||DB[empAt]?.codigoSistema||'';
     // Valor: float puro sem separadores (ex: 1500.50) — coluna numérica limpa
@@ -2000,7 +2000,7 @@ function expCSV(){
     return[l.data,l.debito,l.credito,valorFloat,l.historico,'1',cod]
       .map(v=>'"'+String(v||'').replace(/"/g,'""')+'"').join(';');
   }).join('\n');
-  const blob=new Blob(['\uFEFF'+h+r],{type:'text/csv;charset=utf-8'});
+  const blob=new Blob(['\uFEFF'+r],{type:'text/csv;charset=utf-8'});
   const a=document.createElement('a');a.href=URL.createObjectURL(blob);
   a.download='lancamentos_'+(DB[empAt]?.bancos?.[banAt]?.nome||'banco').replace(/\s/g,'_')+'.csv';a.click();
 }
